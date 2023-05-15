@@ -22,15 +22,6 @@ class m230510_080106_create_foreign_key extends Migration
 //            'CASCADE'
 //        );
 
-//        $this->addForeignKey(
-//            'fk-post-id_comment',
-//            'post',
-//            'id_comment',
-//            'comment',
-//            'id_comment',
-//            'CASCADE',
-//            'CASCADE'
-//        );
 
 //        $this->addForeignKey(
 //            'fk-post-id_category',
