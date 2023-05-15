@@ -1,35 +1,36 @@
 <?php
 
-/** @var View $this */
+/** @var yii\web\View $this */
 /** @var string $content */
 
-use backend\assets\DashboardAsset;
 use backend\assets\AppAsset;
-use common\widgets\Alert;
-use yii\bootstrap5\Breadcrumbs;
-use yii\bootstrap5\Html;
-use yii\bootstrap5\Nav;
-use yii\bootstrap5\NavBar;
-use yii\web\View;
+use yii\helpers\Html;
 
-DashboardAsset::register($this);
-AppAsset::register($this);
-
+\backend\assets\DashboardAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>" class="h-100">
+<html lang="en">
+
 <head>
-    <meta charset="<?= Yii::$app->charset ?>">
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <?php $this->registerCsrfMetaTags() ?>
-    <title>My Blogs App</title>
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <?php $this->head() ?>
+    <!-- Title -->
+    <title>Original - Lifestyle Blog Templa</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="img/core-img/favicon.ico">
+
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="style.css">
+
 </head>
-<body class="d-flex flex-column h-100">
-<?php $this->beginBody() ?>
 
+<body>
 <!-- Preloader -->
 <div id="preloader">
     <div class="preload-content">
@@ -717,7 +718,17 @@ AppAsset::register($this);
 </footer>
 <!-- ##### Footer Area End ##### -->
 
-<?php $this->endBody() ?>
+<!-- jQuery (Necessary for All JavaScript Plugins) -->
+<script src="js/jquery/jquery-2.2.4.min.js"></script>
+<!-- Popper js -->
+<script src="js/popper.min.js"></script>
+<!-- Bootstrap js -->
+<script src="js/bootstrap.min.js"></script>
+<!-- Plugins js -->
+<script src="js/plugins.js"></script>
+<!-- Active js -->
+<script src="js/active.js"></script>
+
 </body>
+
 </html>
-<?php $this->endPage();
