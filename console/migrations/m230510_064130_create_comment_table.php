@@ -16,8 +16,8 @@ class m230510_064130_create_comment_table extends Migration
             'id_comment' => $this->primaryKey(),
             'id_user' => $this->integer()->notNull(),
             'content' => $this->string()->notNull(),
-            'created_at' => $this->timestamp()->defaultValue(null),
-            'updated_at' => $this->timestamp()->defaultValue(null),
+            'created_at' => $this->integer()->defaultValue(null),
+            'updated_at' => $this->integer()->defaultValue(null),
         ]);
     }
 

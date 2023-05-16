@@ -9,7 +9,6 @@ use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\base\Model;
 use yii\web\UploadedFile;
-use yii\db\Expression;
 
 /**
  * This is the model class for table "post".
@@ -44,18 +43,32 @@ class Post extends \yii\db\ActiveRecord
             [
                 'class' => BlameableBehavior::class,
                 'createdByAttribute' => 'id_user',
+                'updatedByAttribute' => false
                 // 'slugAttribute' => 'slug',
             ],
             [
                 'class' => TimestampBehavior::class,
-                'createdAtAttribute' => 'create_time',
-                'updatedAtAttribute' => 'update_time',
-                'value' => new Expression('NOW()'),
             ],
         ];
     }
 
-    public $file;
+    public $imageFile;
+
+    public function upload()
+    {
+        $dir = Yii::getAlias('@backend/web/uploads/');
+        if ($this->validate()) {
+            if (!is_dir($dir)){
+                mkdir($dir);
+            }
+            $this->imageFile->saveAs($dir . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            $this->image = $dir . $this->imageFile->baseName . '.' . $this->imageFile->extension;
+            return true;
+        } else {
+            Yii::debug($this->errors);
+            return false;
+        }
+    }
 
     /**
      * {@inheritdoc}
@@ -71,12 +84,12 @@ class Post extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'slug', 'id_user', 'id_comment', 'id_category', 'id_tag', 'image'], 'required'],
+            [['title','description', 'id_category', 'id_tag'], 'required'],
             [['description'], 'string'],
             [['id_user', 'id_comment', 'id_category', 'id_tag'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['file'], 'file'],
             [['title', 'slug', 'image'], 'string', 'max' => 255],
+            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],
             [['id_category'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['id_category' => 'id_category']],
             [['id_tag'], 'exist', 'skipOnError' => true, 'targetClass' => Tag::class, 'targetAttribute' => ['id_tag' => 'id_tag']],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['id_user' => 'id']],
@@ -100,6 +113,7 @@ class Post extends \yii\db\ActiveRecord
             'image' => 'Image',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'file' => 'Image'
         ];
     }
 
