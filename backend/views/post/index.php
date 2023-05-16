@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Post', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -33,13 +33,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'title',
             'description:ntext',
             'slug',
-            'id_user',
-            //'id_comment',
-            //'id_category',
-            //'id_tag',
-            //'image',
-            //'created_at',
-            //'updated_at',
+//            'id_user',
+//            'id_comment',
+            'id_category',
+            'id_tag',
+            'image',
+            'created_at:datetime',
+            'updated_at:datetime',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Post $model, $key, $index, $column) {

@@ -12,43 +12,33 @@ class m230510_080106_create_foreign_key extends Migration
      */
     public function safeUp()
     {
-//        $this->addForeignKey(
-//            'fk-post-id_user',
-//            'post',
-//            'id_user',
-//            'user',
-//            'id',
-//            'CASCADE',
-//            'CASCADE'
-//        );
-
-
-//        $this->addForeignKey(
-//            'fk-post-id_category',
-//            'post',
-//            'id_category',
-//            'category',
-//            'id_category',
-//            'CASCADE',
-//            'CASCADE'
-//        );
-
-//        $this->addForeignKey(
-//            'fk-post-id_tag',
-//            'post',
-//            'id_tag',
-//            'tag',
-//            'id_tag',
-//            'CASCADE',
-//            'CASCADE'
-//        );
-
         $this->addForeignKey(
-            'fk-comment-id_user',
-            'comment',
+            'fk-post-id_user',
+            'post',
             'id_user',
             'user',
             'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+
+        $this->addForeignKey(
+            'fk-post-id_category',
+            'post',
+            'id_category',
+            'category',
+            'id_category',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        $this->addForeignKey(
+            'fk-post-id_tag',
+            'post',
+            'id_tag',
+            'tag',
+            'id_tag',
             'CASCADE',
             'CASCADE'
         );

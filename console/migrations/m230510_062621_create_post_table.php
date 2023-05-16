@@ -16,14 +16,13 @@ class m230510_062621_create_post_table extends Migration
             'id_post' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'description' => $this->text(),
-            'slug' => $this->string()->notNull(),
-            'id_user' => $this->integer()->notNull(),
-            'id_comment' => $this->integer()->notNull(),
+            'id_user' => $this->integer(),
+            'id_comment' => $this->integer(),
             'id_category' => $this->integer()->notNull(),
             'id_tag' => $this->integer()->notNull(),
             'image' => $this->string()->notNull(),
-            'created_at' => $this->timestamp()->defaultValue(null),
-            'updated_at' => $this->timestamp()->defaultValue(null),
+            'created_at' => $this->integer()->defaultValue(null),
+            'updated_at' => $this->integer()->defaultValue(null),
         ]);
     }
 

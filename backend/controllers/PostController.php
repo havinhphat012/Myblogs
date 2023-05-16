@@ -7,6 +7,7 @@ use backend\models\PostSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 
 /**
@@ -33,6 +34,7 @@ class PostController extends Controller
             ]
         );
     }
+
 
     /**
      * Lists all Post models.
@@ -73,10 +75,14 @@ class PostController extends Controller
         $model = new Post();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id_post' => $model->id_post]);
-            }
-            else{
+
+            if ($model->load($this->request->post())) {
+                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                if($model->upload()){
+                    $model->save(false);
+                    return $this->redirect(['view', 'id_post' => $model->id_post]);
+                }
+            } else {
                 \Yii::debug($model->getErrors());
 
             }
@@ -100,8 +106,18 @@ class PostController extends Controller
     {
         $model = $this->findModel($id_post);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id_post' => $model->id_post]);
+        if ($this->request->isPost) {
+
+            if ($model->load($this->request->post())) {
+                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                if($model->upload()){
+                    $model->save(false);
+                    return $this->redirect(['view', 'id_post' => $model->id_post]);
+                }
+            } else {
+                \Yii::debug($model->getErrors());
+
+            }
         }
 
         return $this->render('update', [
