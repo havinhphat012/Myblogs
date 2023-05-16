@@ -40,8 +40,8 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'image',
                 'value' => function (Post $model) {
-                    return Html::img(Yii::getAlias($model->image),
-                        ['width' => '50px', 'height' => '50px']);
+                    return Html::img("/".$model->image,
+                        ['width' => '150px', 'height' => '150px']);
                 },
                 'format' => 'raw'
             ],

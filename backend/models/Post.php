@@ -57,17 +57,21 @@ class Post extends \yii\db\ActiveRecord
     public function upload()
     {
 //        $dir = Yii::getAlias('@backend/web/uploads/');
-        $dir = '/uploads/';
-        if ($this->validate()) {
-            if (!is_dir($dir)){
-                mkdir($dir);
+        $dir = 'uploads/';
+        try {
+            if ($this->validate()) {
+                if (!is_dir($dir)) {
+                    mkdir($dir);
+                }
+                $this->imageFile->saveAs($dir . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+                $this->image = $dir . $this->imageFile->baseName . '.' . $this->imageFile->extension;
+                return true;
+            } else {
+                Yii::debug($this->errors);
+                return false;
             }
-            $this->imageFile->saveAs($dir . $this->imageFile->baseName . '.' . $this->imageFile->extension);
-            $this->image = $dir . $this->imageFile->baseName . '.' . $this->imageFile->extension;
-            return true;
-        } else {
-            Yii::debug($this->errors);
-            return false;
+        } catch (\Exception $exception){
+            Yii::debug($exception);
         }
     }
 

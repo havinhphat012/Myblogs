@@ -4,7 +4,10 @@
 /** @var string $content */
 
 use backend\assets\AppAsset;
+use backend\models\Post;
 use yii\helpers\Html;
+use yii\web\Request;
+use yii\helpers\StringHelper;
 
 \backend\assets\DashboardAsset::register($this);
 ?>
@@ -144,7 +147,7 @@ use yii\helpers\Html;
                                         <li><a href="coming-soon.html">Coming Soon</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="#">Catagory</a>
+                                <li><a href="/category">Catagory</a>
                                     <ul class="dropdown">
                                         <li><a href="#">Catagory 1</a></li>
                                         <li><a href="#">Catagory 1</a></li>
@@ -169,8 +172,8 @@ use yii\helpers\Html;
                                         <li><a href="#">Catagory 1</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="about-us.html">About Us</a></li>
-                                <li><a href="#">Megamenu</a>
+                                <li><a href="/post">Post</a></li>
+                                <li><a href="/tag">Tag</a>
                                     <div class="megamenu">
                                         <ul class="single-mega cn-col-4">
                                             <li class="title">Headline 1</li>
@@ -229,9 +232,7 @@ use yii\helpers\Html;
 
 <!-- ##### Hero Area Start ##### -->
 <?php
-$posts = \backend\models\Post::find()->limit(3)->orderBy(['id_post' => SORT_DESC])->all();
-//$countComment = \backend\models\Comment::find()->where(['id_post'=> 1])->count();
-//var_dump($countComment);
+$posts = Post::find()->limit(5)->orderBy(['id_post' => SORT_DESC])->all();
 ?>
 
 <div class="hero-area">
@@ -240,6 +241,7 @@ $posts = \backend\models\Post::find()->limit(3)->orderBy(['id_post' => SORT_DESC
     <div class="hero-slides owl-carousel">
         <?php
         foreach ($posts as $post):
+            /** @var Post $post */
             ?>
 <!--        ### Single Slide ###-->
         <div class="single-hero-slide bg-img" style="background-image: url(<?=$post->image?>);">
@@ -259,36 +261,6 @@ $posts = \backend\models\Post::find()->limit(3)->orderBy(['id_post' => SORT_DESC
         <?php
         endforeach;
         ?>
-<!--        ### Single Slide ###-->
-<!--        <div class="single-hero-slide bg-img" style="background-image: url(img/bg-img/b1.jpg);">-->
-<!--            <div class="container h-100">-->
-<!--                <div class="row h-100 align-items-center">-->
-<!--                    <div class="col-12">-->
-<!--                        <div class="slide-content text-center">-->
-<!--                            <div class="post-tag">-->
-<!--                                <a href="#" data-animation="fadeInUp">lifestyle</a>-->
-<!--                            </div>-->
-<!--                            <h2 data-animation="fadeInUp" data-delay="250ms"><a href="single-post.html">Take a look at last night’s party!</a></h2>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        ### Single Slide ###-->
-<!--        <div class="single-hero-slide bg-img" style="background-image: url(img/bg-img/b3.jpg);">-->
-<!--            <div class="container h-100">-->
-<!--                <div class="row h-100 align-items-center">-->
-<!--                    <div class="col-12">-->
-<!--                        <div class="slide-content text-center">-->
-<!--                            <div class="post-tag">-->
-<!--                                <a href="#" data-animation="fadeInUp">lifestyle</a>-->
-<!--                            </div>-->
-<!--                            <h2 data-animation="fadeInUp" data-delay="250ms"><a href="single-post.html">Take a look at last night’s party!</a></h2>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
     </div>
 </div>
 <!-- ##### Hero Area End ##### -->
@@ -343,13 +315,21 @@ $posts = \backend\models\Post::find()->limit(3)->orderBy(['id_post' => SORT_DESC
             <div class="col-12 col-lg-9">
 
                 <!-- Single Blog Area  -->
+            <?php
+            foreach ($posts as $post):
+                /** @var Post $post */
+            ?>
                 <div class="single-blog-area blog-style-2 mb-50 wow fadeInUp" data-wow-delay="0.2s" data-wow-duration="1000ms">
                     <div class="row align-items-center">
                         <div class="col-12 col-md-6">
                             <div class="single-blog-thumbnail">
-                                <img src="img/blog-img/3.jpg" alt="">
+                                <img src= <?=$post->image?> alt="Image Blogs">
                                 <div class="post-date">
-                                    <a href="#">12 <span>march</span></a>
+                                    <a href="#">
+                                        <?= Yii::$app->formatter->asDate($post->created_at, 'dd');?>
+                                        <span>
+                                            <?= Yii::$app->formatter->asDate($post->created_at, 'php:M'); ?>
+                                        </span></a>
                                 </div>
                             </div>
                         </div>
@@ -357,126 +337,20 @@ $posts = \backend\models\Post::find()->limit(3)->orderBy(['id_post' => SORT_DESC
                             <!-- Blog Content -->
                             <div class="single-blog-content">
                                 <div class="line"></div>
-                                <a href="#" class="post-tag">Lifestyle</a>
-                                <h4><a href="#" class="post-headline">Party people in the house</a></h4>
-                                <p>Curabitur venenatis efficitur lorem sed tempor. Integer aliquet tempor cursus. Nullam vestibulum convallis risus vel condimentum. Nullam auctor lorem in libero luctus, vel volutpat quam tincidunt.</p>
+                                <a href="#" class="post-tag"><?= $post->category->title ?></a>
+                                <h4><a href="#" class="post-headline"><?=$post->title ?></a></h4>
+                                <p><?= $post->description = StringHelper::truncateWords($post->description, 50, '...', true);?></p>
                                 <div class="post-meta">
-                                    <p>By <a href="#">james smith</a></p>
-                                    <p>3 comments</p>
+                                    <p>By <a href="#"><?=$post->user->username?></a></p>
+                                    <p><?=$countComment = \backend\models\Comment::find()->where(['id_post'=> 1])->count();?> comment</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Single Blog Area  -->
-                <div class="single-blog-area blog-style-2 mb-50 wow fadeInUp" data-wow-delay="0.3s" data-wow-duration="1000ms">
-                    <div class="row align-items-center">
-                        <div class="col-12 col-md-6">
-                            <div class="single-blog-thumbnail">
-                                <img src="img/blog-img/4.jpg" alt="">
-                                <div class="post-date">
-                                    <a href="#">12 <span>march</span></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <!-- Blog Content -->
-                            <div class="single-blog-content">
-                                <div class="line"></div>
-                                <a href="#" class="post-tag">Lifestyle</a>
-                                <h4><a href="#" class="post-headline">We love colors in 2018</a></h4>
-                                <p>Curabitur venenatis efficitur lorem sed tempor. Integer aliquet tempor cursus. Nullam vestibulum convallis risus vel condimentum. Nullam auctor lorem in libero luctus, vel volutpat quam tincidunt.</p>
-                                <div class="post-meta">
-                                    <p>By <a href="#">james smith</a></p>
-                                    <p>3 comments</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Single Blog Area  -->
-                <div class="single-blog-area blog-style-2 mb-50 wow fadeInUp" data-wow-delay="0.4s" data-wow-duration="1000ms">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="single-blog-thumbnail">
-                                <img src="img/blog-img/7.jpg" alt="">
-                                <div class="post-date">
-                                    <a href="#">10 <span>march</span></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <!-- Blog Content -->
-                            <div class="single-blog-content mt-50">
-                                <div class="line"></div>
-                                <a href="#" class="post-tag">Lifestyle</a>
-                                <h4><a href="#" class="post-headline">10 Tips to organize the perfect party</a></h4>
-                                <p>Curabitur venenatis efficitur lorem sed tempor. Integer aliquet tempor cursus. Nullam vestibulum convallis risus vel condimentum. Nullam auctor lorem in libero luctus, vel volutpat quam tincidunt.</p>
-                                <div class="post-meta">
-                                    <p>By <a href="#">james smith</a></p>
-                                    <p>3 comments</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Single Blog Area  -->
-                <div class="single-blog-area blog-style-2 mb-50 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1000ms">
-                    <div class="row align-items-center">
-                        <div class="col-12 col-md-6">
-                            <div class="single-blog-thumbnail">
-                                <img src="img/blog-img/5.jpg" alt="">
-                                <div class="post-date">
-                                    <a href="#">12 <span>march</span></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <!-- Blog Content -->
-                            <div class="single-blog-content">
-                                <div class="line"></div>
-                                <a href="#" class="post-tag">Lifestyle</a>
-                                <h4><a href="#" class="post-headline">Party people in the house</a></h4>
-                                <p>Curabitur venenatis efficitur lorem sed tempor. Integer aliquet tempor cursus. Nullam vestibulum convallis risus vel condimentum. Nullam auctor lorem in libero luctus, vel volutpat quam tincidunt.</p>
-                                <div class="post-meta">
-                                    <p>By <a href="#">james smith</a></p>
-                                    <p>3 comments</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Single Blog Area  -->
-                <div class="single-blog-area blog-style-2 mb-50 wow fadeInUp" data-wow-delay="0.6s" data-wow-duration="1000ms">
-                    <div class="row align-items-center">
-                        <div class="col-12 col-md-6">
-                            <div class="single-blog-thumbnail">
-                                <img src="img/blog-img/6.jpg" alt="">
-                                <div class="post-date">
-                                    <a href="#">12 <span>march</span></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <!-- Blog Content -->
-                            <div class="single-blog-content">
-                                <div class="line"></div>
-                                <a href="#" class="post-tag">Lifestyle</a>
-                                <h4><a href="#" class="post-headline">We love colors in 2018</a></h4>
-                                <p>Curabitur venenatis efficitur lorem sed tempor. Integer aliquet tempor cursus. Nullam vestibulum convallis risus vel condimentum. Nullam auctor lorem in libero luctus, vel volutpat quam tincidunt.</p>
-                                <div class="post-meta">
-                                    <p>By <a href="#">james smith</a></p>
-                                    <p>3 comments</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+            <?php
+            endforeach;
+            ?>
                 <!-- Load More -->
                 <div class="load-more-btn mt-100 wow fadeInUp" data-wow-delay="0.7s" data-wow-duration="1000ms">
                     <a href="#" class="btn original-btn">Read More</a>
@@ -488,12 +362,21 @@ $posts = \backend\models\Post::find()->limit(3)->orderBy(['id_post' => SORT_DESC
                 <div class="post-sidebar-area">
 
                     <!-- Widget Area -->
+<!--                    --><?php
+//                    foreach ($posts as $post):
+//                        /** @var Post $post */
+//                        ?>
                     <div class="sidebar-widget-area">
                         <form action="#" class="search-form">
-                            <input type="search" name="search" id="searchForm" placeholder="Search">
+                            <input type="Search"name="search" id="searchForm" placeholder="Search">
+<!--                            --><?php //=$post= Post()::find()->all();?>
+
                             <input type="submit" value="submit">
                         </form>
                     </div>
+<!--                    --><?php
+//                    endforeach;
+//                    ?>
 
                     <!-- Widget Area -->
                     <div class="sidebar-widget-area">
@@ -515,90 +398,61 @@ $posts = \backend\models\Post::find()->limit(3)->orderBy(['id_post' => SORT_DESC
                     <!-- Widget Area -->
                     <div class="sidebar-widget-area">
                         <h5 class="title">Latest Posts</h5>
-
+                        <?php $posts = Post::find()->limit(4)->orderBy(['created_at' => SORT_DESC])->all(); ?>
+                        <?php
+                        foreach ($posts as $post):
+                        /** @var Post $post */
+                        ?>
                         <div class="widget-content">
 
                             <!-- Single Blog Post -->
                             <div class="single-blog-post d-flex align-items-center widget-post">
                                 <!-- Post Thumbnail -->
                                 <div class="post-thumbnail">
-                                    <img src="img/blog-img/lp1.jpg" alt="">
+                                    <img src="<?=$post->image?>" alt="Image latest Posts">
                                 </div>
                                 <!-- Post Content -->
                                 <div class="post-content">
-                                    <a href="#" class="post-tag">Lifestyle</a>
-                                    <h4><a href="#" class="post-headline">Party people in the house</a></h4>
+                                    <a href="#" class="post-tag"><?=$post->category->title?></a>
+                                    <h4><a href="#" class="post-headline"><?=$post->title?></a></h4>
                                     <div class="post-meta">
-                                        <p><a href="#">12 March</a></p>
+                                        <p><a href="#">
+                                                <?= Yii::$app->formatter->asDate($post->created_at, 'dd');?>
+                                                <span>
+                                            <?= Yii::$app->formatter->asDate($post->created_at, 'php:M'); ?>
+                                        </span></a></p>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Single Blog Post -->
-                            <div class="single-blog-post d-flex align-items-center widget-post">
-                                <!-- Post Thumbnail -->
-                                <div class="post-thumbnail">
-                                    <img src="img/blog-img/lp2.jpg" alt="">
-                                </div>
-                                <!-- Post Content -->
-                                <div class="post-content">
-                                    <a href="#" class="post-tag">Lifestyle</a>
-                                    <h4><a href="#" class="post-headline">A sunday in the park</a></h4>
-                                    <div class="post-meta">
-                                        <p><a href="#">12 March</a></p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Single Blog Post -->
-                            <div class="single-blog-post d-flex align-items-center widget-post">
-                                <!-- Post Thumbnail -->
-                                <div class="post-thumbnail">
-                                    <img src="img/blog-img/lp3.jpg" alt="">
-                                </div>
-                                <!-- Post Content -->
-                                <div class="post-content">
-                                    <a href="#" class="post-tag">Lifestyle</a>
-                                    <h4><a href="#" class="post-headline">Party people in the house</a></h4>
-                                    <div class="post-meta">
-                                        <p><a href="#">12 March</a></p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Single Blog Post -->
-                            <div class="single-blog-post d-flex align-items-center widget-post">
-                                <!-- Post Thumbnail -->
-                                <div class="post-thumbnail">
-                                    <img src="img/blog-img/lp4.jpg" alt="">
-                                </div>
-                                <!-- Post Content -->
-                                <div class="post-content">
-                                    <a href="#" class="post-tag">Lifestyle</a>
-                                    <h4><a href="#" class="post-headline">A sunday in the park</a></h4>
-                                    <div class="post-meta">
-                                        <p><a href="#">12 March</a></p>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
+                        <?php
+                        endforeach;
+                        ?>
                     </div>
+
 
                     <!-- Widget Area -->
                     <div class="sidebar-widget-area">
+
                         <h5 class="title">Tags</h5>
+
                         <div class="widget-content">
                             <ul class="tags">
-                                <li><a href="#">design</a></li>
-                                <li><a href="#">fashion</a></li>
-                                <li><a href="#">travel</a></li>
-                                <li><a href="#">music</a></li>
-                                <li><a href="#">party</a></li>
-                                <li><a href="#">video</a></li>
-                                <li><a href="#">photography</a></li>
-                                <li><a href="#">adventure</a></li>
+                                <?php
+                                $tags = Post::find()->limit(5)->select('id_tag')->distinct()->all();
+                                ?>
+                                <?php
+                                foreach ($posts as $post):
+                                    /** @var Post $post */
+                                    ?>
+                                <li><a href="/<?=$post->title?>"><?=$post->title?></a></li>
+                                <?php
+                                endforeach;
+                                ?>
                             </ul>
                         </div>
+
                     </div>
                 </div>
             </div>
