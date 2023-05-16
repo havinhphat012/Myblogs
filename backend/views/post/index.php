@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Post', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -35,16 +35,24 @@ $this->params['breadcrumbs'][] = $this->title;
             'slug',
 //            'id_user',
 //            'id_comment',
-            'id_category',
-            'id_tag',
-            'image',
+            'category.title',
+            'tag.title',
+            [
+                'attribute' => 'image',
+                'value' => function (Post $model) {
+                    return Html::img(Yii::getAlias($model->image),
+                        ['width' => '50px', 'height' => '50px']);
+                },
+                'format' => 'raw'
+            ],
+            'user.username',
             'created_at:datetime',
             'updated_at:datetime',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Post $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id_post' => $model->id_post]);
-                 }
+                }
             ],
         ],
     ]); ?>

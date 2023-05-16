@@ -56,7 +56,8 @@ class Post extends \yii\db\ActiveRecord
 
     public function upload()
     {
-        $dir = Yii::getAlias('@backend/web/uploads/');
+//        $dir = Yii::getAlias('@backend/web/uploads/');
+        $dir = '/uploads/';
         if ($this->validate()) {
             if (!is_dir($dir)){
                 mkdir($dir);
