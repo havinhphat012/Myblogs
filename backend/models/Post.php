@@ -53,6 +53,7 @@ class Post extends \yii\db\ActiveRecord
     }
 
     public $imageFile;
+    public $old_imageFile;
 
     public function upload()
     {
@@ -63,8 +64,10 @@ class Post extends \yii\db\ActiveRecord
                 if (!is_dir($dir)) {
                     mkdir($dir);
                 }
+                if($this->imageFile){
                 $this->imageFile->saveAs($dir . $this->imageFile->baseName . '.' . $this->imageFile->extension);
                 $this->image = $dir . $this->imageFile->baseName . '.' . $this->imageFile->extension;
+                }
                 return true;
             } else {
                 Yii::debug($this->errors);
@@ -90,11 +93,11 @@ class Post extends \yii\db\ActiveRecord
     {
         return [
             [['title','description', 'id_category', 'id_tag'], 'required'],
-            [['description'], 'string'],
+            [['description','old_imageFile'], 'string'],
             [['id_user', 'id_comment', 'id_category', 'id_tag'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['title', 'slug', 'image'], 'string', 'max' => 255],
-            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
             [['id_category'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['id_category' => 'id_category']],
             [['id_tag'], 'exist', 'skipOnError' => true, 'targetClass' => Tag::class, 'targetAttribute' => ['id_tag' => 'id_tag']],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['id_user' => 'id']],
@@ -118,7 +121,9 @@ class Post extends \yii\db\ActiveRecord
             'image' => 'Image',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
-            'file' => 'Image'
+            'file' => 'Image',
+        'old_image' => 'Old_image'
+
         ];
     }
 

@@ -2,6 +2,7 @@
 
 use backend\models\Post;
 use yii\helpers\Html;
+use yii\helpers\StringHelper;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
@@ -31,10 +32,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id_post',
             'title',
-            'description:ntext',
+            [
+                'attribute'=>'description',
+                'value' => function (Post $model) {
+                    return StringHelper::truncateWords($model->description, 15, '...', true);
+                },
+                'format' => 'raw'
+            ],
             'slug',
-//            'id_user',
-//            'id_comment',
             'category.title',
             'tag.title',
             [
@@ -48,14 +53,23 @@ $this->params['breadcrumbs'][] = $this->title;
             'user.username',
             'created_at:datetime',
             'updated_at:datetime',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Post $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id_post' => $model->id_post]);
-                }
+            ['class' => 'yii\grid\ActionColumn',
+                'template'=>'{view} {update} {delete}',
+                'buttons'=>[
+                    'view' => function ($url, $model) {
+                        return Html::a('view','post/slug/'.  $model->slug, ['title' => Yii::t('yii', 'View'),]);
+                    },
+                    'update' => function ($url, $model) {
+                        return Html::a('update',['post/update','id_post' => $model->id_post], ['title' => Yii::t('yii', 'Update'),]);
+                    },
+                    'delete' => function ($url, $model) {
+                        return Html::a('delete',['post/delete','id_post' => $model->id_post], ['data-method' => 'POST'], ['title' => Yii::t('yii', 'Delete'),]);
+                    },
+                ],
             ],
         ],
     ]); ?>
 
 
 </div>
+

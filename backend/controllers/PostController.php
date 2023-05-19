@@ -4,9 +4,11 @@ namespace backend\controllers;
 
 use backend\models\Post;
 use backend\models\PostSearch;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 
@@ -15,8 +17,6 @@ use yii\web\UploadedFile;
  */
 class PostController extends Controller
 {
-
-
     /**
      * @inheritDoc
      */
@@ -65,10 +65,22 @@ class PostController extends Controller
         ]);
     }
 
+    public function actionSlug($slug)
+    {
+        $model = Post::find()->where(['slug'=>$slug])->one();
+        if (!is_null($model)) {
+            return $this->render('view', [
+                'model' => $model,
+            ]);
+        }else {
+            return $this->redirect('/post/index');
+        }
+    }
+
     /**
      * Creates a new Post model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * @return string|Response
      */
     public function actionCreate()
     {
@@ -99,26 +111,23 @@ class PostController extends Controller
      * Updates an existing Post model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id_post Id Post
-     * @return string|\yii\web\Response
+     * @return string|Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id_post)
     {
         $model = $this->findModel($id_post);
 
-        if ($this->request->isPost) {
-
-            if ($model->load($this->request->post())) {
-                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+        if ($model->load(Yii::$app->request->post())) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if($model->imageFile === null) {
+                $model->imageFile = $model->old_imageFile;
+            }
                 if($model->upload()){
                     $model->save(false);
                     return $this->redirect(['view', 'id_post' => $model->id_post]);
                 }
-            } else {
-                \Yii::debug($model->getErrors());
-
             }
-        }
 
         return $this->render('update', [
             'model' => $model,
@@ -129,7 +138,7 @@ class PostController extends Controller
      * Deletes an existing Post model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id_post Id Post
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id_post)

@@ -13,6 +13,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="post-view">
 
+
+
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
@@ -31,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id_post',
             'title',
-            'description:text',
+            'description:html',
             'slug',
             'id_user',
             'id_comment',

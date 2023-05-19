@@ -38,9 +38,22 @@ return [
             'errorAction' => 'site/error',
         ],
         'urlManager' => [
+            'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'post' => 'post/index',
+                'post/index' => 'post/index',
+                'post/create' => 'post/create',
+//                'post/view/<id_post:\d+>' => 'post/view',
+                'post/slug/<slug>' => 'post/slug',
+                'post/update/<id_post:\d+>' => 'post/update',
+                'post/delete/<id_post:\d+>' => 'post/delete',
+//                '<controller:\w+>/<id_post:\d+>' => '<controller>/view',
+//                '<controller:\w+>/<action:\w+>/<id_post:\d+>' => '<controller>/<action>',
+//                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+
+            //                        'defaultRoute' => '/site/index',
             ],
         ],
     ],

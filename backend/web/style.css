@@ -1128,6 +1128,7 @@ textarea:focus ~ .highlight {
     animation: lens-in 0.6s linear 0.9s forwards; }
 #search-wrapper #search {
     background: none;
+    cursor: pointer;
     border: 2px solid;
     border-color: #000000;
     outline: none;
