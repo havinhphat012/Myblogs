@@ -46,7 +46,7 @@ use dosamigos\tinymce\TinyMce;
         <div class="form-group">
             <label class="control-label" style="margin-bottom: 24px;"><?= $model->getAttributeLabel('imageFile') ?></label>
             <div class="custom-file">
-                <input type="file" class="custom-file-input" name="post['imageFile]" id="validatedCustomFile">
+                <input type="file" class="custom-file-input" name="Post[imageFile]" id="validatedCustomFile">
                 <label class="custom-file-label" for="validatedCustomFile">
                     <?= $model->isNewRecord ? 'Choose A Picture' : $model->image ?>
                 </label>

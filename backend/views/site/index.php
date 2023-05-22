@@ -6,7 +6,7 @@ use backend\models\Post;
 use yii\helpers\Html;
 use yii\helpers\StringHelper;
 
-$this->title = 'My Yii Application';
+$this->title = 'My Blog';
 ?>
 
 <!-- ##### Hero Area Start ##### -->
@@ -61,7 +61,7 @@ $posts = Post::find()->limit(5)->orderBy(['id_post' => SORT_DESC])->all();
                     <div class="row align-items-center">
                         <div class="col-12 col-md-6">
                             <div class="single-blog-thumbnail">
-                                <img src= <?=$post->image?> alt="Image Blogs">
+                                <?=Html::img("/".$post->image, ['width'=>'386px', 'height'=>'289px'])?>
                                 <div class="post-date">
                                     <a href="">
                                         <?= Yii::$app->formatter->asDate($post->created_at, 'dd');?>

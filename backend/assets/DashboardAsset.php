@@ -18,9 +18,9 @@ class DashboardAsset extends AssetBundle
         'css/font-awesome.min.css',
         'css/owl.carousel.css',
         'css/site.css',
-        'style.css',
+        '/style.css',
         '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css',
-        '//code.ionicframwork.com/ionicons/2.0.1/css/ionicons.min.css'
+//        '//code.ionicframwork.com/ionicons/2.0.1/css/ionicons.min.css'
         ];
     public $js = [
         'js/jquery/jquery-2.2.4.min.js',

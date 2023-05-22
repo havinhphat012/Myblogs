@@ -30,7 +30,6 @@ use yii\helpers\StringHelper;
     <link rel="icon" href="img/core-img/favicon.ico">
 
     <!-- Style CSS -->
-    <link rel="stylesheet" href="style.css">
     <?php $this->head() ?>
 </head>
 
