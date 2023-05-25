@@ -47,6 +47,8 @@ return [
                 'post/create' => 'post/create',
 //                'post/view/<id_post:\d+>' => 'post/view',
                 'post/slug/<slug>' => 'post/slug',
+                'post/category/<category>' => 'post/category',
+                'post/tag/<tag>' => 'post/tag',
                 'post/update/<id_post:\d+>' => 'post/update',
                 'post/delete/<id_post:\d+>' => 'post/delete',
 //                '<controller:\w+>/<id_post:\d+>' => '<controller>/view',

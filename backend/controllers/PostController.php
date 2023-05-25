@@ -67,14 +67,36 @@ class PostController extends Controller
 
     public function actionSlug($slug)
     {
-        $model = Post::find()->where(['slug'=>$slug])->one();
+        $model = Post::find()->where(['slug' => $slug])->one();
         if (!is_null($model)) {
             return $this->render('view', [
                 'model' => $model,
             ]);
-        }else {
+        } else {
             return $this->redirect('/post/index');
         }
+    }
+
+    public function actionCategory($category)
+    {
+        $model = Post::find()
+            ->innerJoinWith('category')
+            ->where(['category.title' => $category])
+            ->all();
+        return $this->render('view_category', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionTag($tag)
+    {
+        $model = Post::find()
+            ->innerJoinWith('tag')
+            ->where(['tag.title' => $tag])
+            ->all();
+        return $this->render('view_tag', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -90,7 +112,7 @@ class PostController extends Controller
 
             if ($model->load($this->request->post())) {
                 $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-                if($model->upload()){
+                if ($model->upload()) {
                     $model->save(false);
                     return $this->redirect(['view', 'id_post' => $model->id_post]);
                 }
@@ -120,14 +142,14 @@ class PostController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            if($model->imageFile === null) {
+            if ($model->imageFile === null) {
                 $model->imageFile = $model->old_imageFile;
             }
-                if($model->upload()){
-                    $model->save(false);
-                    return $this->redirect(['view', 'id_post' => $model->id_post]);
-                }
+            if ($model->upload()) {
+                $model->save(false);
+                return $this->redirect(['view', 'id_post' => $model->id_post]);
             }
+        }
 
         return $this->render('update', [
             'model' => $model,

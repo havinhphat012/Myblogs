@@ -4,10 +4,20 @@
 /** @var string $content */
 
 use backend\assets\AppAsset;
+use backend\models\Category;
+use backend\models\PostSearch;
 use backend\models\Post;
+use backend\models\Tag;
 use yii\helpers\Html;
 use yii\web\Request;
 use yii\helpers\StringHelper;
+use yii\widgets\ActiveForm;
+
+/** @var yii\widgets\ActiveForm $form */
+/** @var backend\models\Post $model */
+/** @var backend\models\PostSearch $model */
+/** @var backend\models\PostSearch $searchModel */
+/** @var yii\data\ActiveDataProvider $dataProvider */
 
 \backend\assets\DashboardAsset::register($this);
 ?>
@@ -101,7 +111,7 @@ use yii\helpers\StringHelper;
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
-                    <a href="/index.php" class="original-logo"><img src="/img/core-img/logo.png" alt=""></a>
+                    <a href="/" class="original-logo"><img src="/img/core-img/logo.png" alt=""></a>
                 </div>
             </div>
         </div>
@@ -138,81 +148,40 @@ use yii\helpers\StringHelper;
                                 <li><a href="#">Pages</a>
                                     <ul class="dropdown">
                                         <li><a href="/">Home</a></li>
-                                        <li><a href="about-us.html">About Us</a></li>
-                                        <li><a href="single-post.html">Single Post</a></li>
-                                        <li><a href="contact.html">Contact</a></li>
-                                        <li><a href="coming-soon.html">Coming Soon</a></li>
+                                        <li><a href="site/about">About Us</a></li>
+                                        <li><a href="site/help">Help</a></li>
+                                        <li><a href="site/condition">condition</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="/category">Catagory</a>
                                     <ul class="dropdown">
-                                        <li><a href="#">Catagory 1</a></li>
-                                        <li><a href="#">Catagory 1</a></li>
-                                        <li><a href="#">Catagory 1</a>
-                                            <ul class="dropdown">
-                                                <li><a href="#">Catagory 2</a></li>
-                                                <li><a href="#">Catagory 2</a></li>
-                                                <li><a href="#">Catagory 2</a>
-                                                    <ul class="dropdown">
-                                                        <li><a href="#">Catagory 3</a></li>
-                                                        <li><a href="#">Catagory 3</a></li>
-                                                        <li><a href="#">Catagory 3</a></li>
-                                                        <li><a href="#">Catagory 3</a></li>
-                                                        <li><a href="#">Catagory 3</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li><a href="#">Catagory 2</a></li>
-                                                <li><a href="#">Catagory 2</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="#">Catagory 1</a></li>
-                                        <li><a href="#">Catagory 1</a></li>
+                                        <?php $categories = Category::find()->limit(5)->all();
+                                        foreach ($categories as $category):
+                                            /** @var Category $category **/
+                                        ?>
+                                        <li><?= Html::a($category->title,['post/category','category'=> $category->title])?></li>
+                                        <?php endforeach;?>
+                                    </ul>
+                                </li>
+                                <li><a href="/tag">Tag</a>
+                                    <ul class="dropdown">
+                                        <?php $tags = \backend\models\Tag::find()->limit(10)->all();
+                                        foreach ($tags as $tag):
+                                            /** @var Tag $tag */
+                                        ?>
+                                        <li><?= Html::a($tag->title, ['post/tag', 'tag'=> $tag->title])?></li>
+                                        <?php endforeach;?>
                                     </ul>
                                 </li>
                                 <li><a href="/post">Post</a></li>
-                                <li><a href="/tag">Tag</a>
-                                    <div class="megamenu">
-                                        <ul class="single-mega cn-col-4">
-                                            <li class="title">Headline 1</li>
-                                            <li><a href="#">Mega Menu Item 1</a></li>
-                                            <li><a href="#">Mega Menu Item 2</a></li>
-                                            <li><a href="#">Mega Menu Item 3</a></li>
-                                            <li><a href="#">Mega Menu Item 4</a></li>
-                                            <li><a href="#">Mega Menu Item 5</a></li>
-                                        </ul>
-                                        <ul class="single-mega cn-col-4">
-                                            <li class="title">Headline 2</li>
-                                            <li><a href="#">Mega Menu Item 1</a></li>
-                                            <li><a href="#">Mega Menu Item 2</a></li>
-                                            <li><a href="#">Mega Menu Item 3</a></li>
-                                            <li><a href="#">Mega Menu Item 4</a></li>
-                                            <li><a href="#">Mega Menu Item 5</a></li>
-                                        </ul>
-                                        <ul class="single-mega cn-col-4">
-                                            <li class="title">Headline 3</li>
-                                            <li><a href="#">Mega Menu Item 1</a></li>
-                                            <li><a href="#">Mega Menu Item 2</a></li>
-                                            <li><a href="#">Mega Menu Item 3</a></li>
-                                            <li><a href="#">Mega Menu Item 4</a></li>
-                                            <li><a href="#">Mega Menu Item 5</a></li>
-                                        </ul>
-                                        <ul class="single-mega cn-col-4">
-                                            <li class="title">Headline 4</li>
-                                            <li><a href="#">Mega Menu Item 1</a></li>
-                                            <li><a href="#">Mega Menu Item 2</a></li>
-                                            <li><a href="#">Mega Menu Item 3</a></li>
-                                            <li><a href="#">Mega Menu Item 4</a></li>
-                                            <li><a href="#">Mega Menu Item 5</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li><a href="contact.html">Contact</a></li>
+
                             </ul>
 
                             <!-- Search Form  -->
+
                             <div id="search-wrapper">
-                                <form action="#">
-                                    <input type="text" id="search" placeholder="Search something...">
+                                <form action="/post" method="get">
+                                    <input type="text" id="search" name="PostSearch[title]" placeholder="Search something...">
                                     <div id="close-icon"></div>
                                     <input class="d-none" type="submit" value="">
                                 </form>

@@ -32,6 +32,21 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'actions' => ['index', 'about'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['index', 'condition'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['index', 'help'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
                 ],
             ],
             'verbs' => [
@@ -64,6 +79,24 @@ class SiteController extends Controller
     {
 //        $this->layout = 'blank';
         return $this->render('index');
+    }
+
+    public function actionAbout()
+    {
+//        $this->layout = 'blank';
+        return $this->render('about');
+    }
+
+    public function actionCondition()
+    {
+//        $this->layout = 'blank';
+        return $this->render('condition');
+    }
+
+    public function actionHelp()
+    {
+//        $this->layout = 'blank';
+        return $this->render('help');
     }
 
     /**

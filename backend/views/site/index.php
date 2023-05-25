@@ -27,9 +27,9 @@ $this->title = 'My Blog';
                         <div class="col-12">
                             <div class="slide-content text-center">
                                 <div class="post-tag">
-                                    <a href="#" data-animation="fadeInUp"><?= $post->category->title ?></a>
+                                    <a href="/" data-animation="fadeInUp"><?= $post->category->title ?></a>
                                 </div>
-                                <h2 data-animation="fadeInUp" data-delay="250ms"><a href="single-post.html"><?=$post->title ?></a></h2>
+                                <h2 data-animation="fadeInUp" data-delay="250ms"><a href=""><?=$post->title ?></a></h2>
                             </div>
                         </div>
                     </div>
@@ -103,7 +103,7 @@ $posts = Post::find()->limit(5)->orderBy(['id_post' => SORT_DESC])->all();
                 <!-- Widget Area -->
                 <div class="sidebar-widget-area">
                     <form action="#" class="search-form">
-                        <input type="Search"name="search" id="searchForm" placeholder="Search">
+                        <input type="Search"name="PostSearch[title]" id="searchForm" placeholder="Search">
                         <input type="submit" value="submit">
                     </form>
                 </div>
