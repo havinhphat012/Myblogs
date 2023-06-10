@@ -3,6 +3,10 @@
 namespace backend\models;
 
 use Yii;
+use common\models\User;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "comment".
@@ -32,7 +36,6 @@ class Comment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_user', 'content'], 'required'],
             [['id_user'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['content'], 'string', 'max' => 255],
@@ -47,10 +50,29 @@ class Comment extends \yii\db\ActiveRecord
     {
         return [
             'id_comment' => 'Id Comment',
-            'id_user' => 'Id User',
             'content' => 'Content',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+        [
+            'class' => SluggableBehavior::class,
+            'attribute' => 'title',
+            // 'slugAttribute' => 'slug',
+        ],
+            [
+                'class' => BlameableBehavior::class,
+                'createdByAttribute' => 'id_user',
+                'updatedByAttribute' => false
+                // 'slugAttribute' => 'slug',
+            ],
+            [
+                'class' => TimestampBehavior::class,
+            ],
         ];
     }
 

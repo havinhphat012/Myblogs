@@ -1,5 +1,6 @@
 <?php
 
+use backend\models\Comment;
 use backend\models\Tag;
 use yii\widgets\DetailView;
 use yii\helpers\Html;
@@ -35,7 +36,7 @@ $this->params['breadcrumbs'][] = $model->updated_at;
     <div class="single-blog-area blog-style-2 mb-50 wow fadeInUp">
         <div class="row align-items-center">
             <div class="single-blog-thumbnail">
-                <?= Html::img("/".$model->image,
+                <?= Html::img("/" . $model->image,
                     ['width' => '1250px', 'height' => '550px']) ?>
                 <div class="post-date">
                     <a href=""">
@@ -61,9 +62,11 @@ $this->params['breadcrumbs'][] = $model->updated_at;
                                 <h4 style="font-weight: 600"><?= Html::encode($this->title) ?></h4>
 
                                 <div class="post-meta row">
-                                    <p class="col-2">By <a href="#"><?= Html::encode($model->user->username) ?></a></p>
-                                    <p class="col-3"><?= $countComment = \backend\models\Comment::find()->where(['id_post' => $model->id_post])->count(); ?>
-                                        comment</p>
+                                    <p class="col-2">By <?= Html::encode($model->user->username) ?></p>
+                                    <p><a class="col-2" href="#talk-comment">
+                                            <?= $countComment = \backend\models\Comment::find()->where(['id_post' => 1])->count(); ?>
+                                            Comment</a>
+                                    </p>
                                 </div>
                                 <?= Html::decode($model->description) ?>
                             </div>
@@ -72,7 +75,7 @@ $this->params['breadcrumbs'][] = $model->updated_at;
                 </div>
 
                 <!-- About Author -->
-                <div class="blog-post-author mt-100 d-flex">
+                <div class="blog-post-author mt-100 d-flex" id="talk-comment">
                     <div class="author-thumbnail">
                         <img style="width: 100%; height: 100%" src="\uploads\1.jpg" alt="AVT">
                     </div>
@@ -81,71 +84,44 @@ $this->params['breadcrumbs'][] = $model->updated_at;
                         <span class="author-role"><?= Html::encode($model->user->username) ?></a></span>
                         <h4><a href="#" class="author-name">Otimus</a></h4>
                         <p>Curabitur venenatis efficitur lorem sed tempor. Integer aliquet tempor cursus. Nullam
-                            vestibulum
-                            convallis risus vel condimentum. Nullam auctor lorem in libero luctus, vel volutpat quam
-                            tincidunt.
-                            Nullam vestibulum convallis risus vel condimentum. Nullam auctor lorem in libero.</p>
+                            vestibulum convallis risus vel condimentum. Nullam auctor lorem in libero luctus, vel
+                            volutpat quam tincidunt.Nullam vestibulum convallis risus vel condimentum. Nullam auctor
+                            lorem in libero.</p>
                     </div>
                 </div>
+
                 <div class="comment_area clearfix mt-70">
                     <h5 class="title">Comments</h5>
                     <ol>
-                        <!-- Single Comment Area -->
-                        <li class="single_comment_area">
-                            <!-- Comment Content -->
-                            <div class="comment-content d-flex">
-                                <!-- Comment Author -->
-                                <div class="comment-author">
-                                    <img src="\uploads\2.png" alt="author">
-                                </div>
-                                <!-- Comment Meta -->
-                                <div class="comment-meta">
-                                    <a href="">
+                        <?php $comments = Comment::find()
+                            ->limit(7)->orderBy(['created_at' => SORT_DESC])->all(); ?>
+                        <?php
+                        foreach ($comments as $comment):
+                            /** @var Comment $comment */
+                            ?>
+                            <!-- Single Comment Area -->
+                            <li class="single_comment_area">
+                                <!-- Comment Content -->
+                                <div class="comment-content d-flex">
+                                    <!-- Comment Author -->
+<!--                                    <div class="comment-author">-->
+<!--                                        <img src="\uploads\2.png" alt="author">-->
+<!--                                    </div>-->
+                                    <!-- Comment Meta -->
+                                    <div class="comment-meta">
+                                        <a href="">
                                         <?= Yii::$app->formatter->asDate($model->created_at, 'dd'); ?>
-                                        <span>
-                                <?= Yii::$app->formatter->asDate($model->created_at, 'php:M'); ?>
-                            </span>
-                                    </a>
-                                    <p><a href="#" class="post-author">Huỳnh James</a></p>
-                                    <p>Phim rất tuyệt vời, tôi đã bị cuốn hút từ đầu đến cuối. Cốt truyện hấp dẫn,
-                                        diễn xuất
-                                        xuất
-                                        sắc và cảnh quay đẹp mắt. Tôi chắc chắn sẽ xem lại phim này nhiều lần!</p>
-                                    <a href="#" class="comment-reply">Reply</a>
-                                </div>
-                            </div>
-                            <ol class="children">
-                                <li class="single_comment_area">
-                                    <!-- Comment Content -->
-                                    <div class="comment-content d-flex">
-                                        <!-- Comment Author -->
-                                        <div class="comment-author">
-                                            <img style="height: 45%" src="\uploads\4.jpg" alt="author">
-                                        </div>
-                                        <!-- Comment Meta -->
-                                        <div class="comment-meta">
-                                            <div class="post-date">
-                                                <a href="">
-                                                    <?= Yii::$app->formatter->asDate($model->created_at, 'dd'); ?>
-                                                    <span>
-                                                <?= Yii::$app->formatter->asDate($model->created_at, 'php:M'); ?>
-                                                </span>
-                                                </a>
-                                            </div>
-                                            <p><a href="#" class="post-author">Alibaba</a></p>
-                                            <p>Tôi đã xem phim này với gia đình và chúng tôi đều rất thích. Phim có
-                                                một
-                                                thông điệp
-                                                sâu sắc và những nhân vật rất thực tế, tạo ra một trải nghiệm đầy
-                                                cảm xúc
-                                                cho khán
-                                                giả.</p>
-                                            <a href="#" class="comment-reply">Reply</a>
-                                        </div>
+                                            <span>
+                                        <?= Yii::$app->formatter->asDate($model->created_at, 'php:M'); ?>
+                                            </span>
+                                        </a>
+                                        <p><?=$comment->user->username?></p>
+                                        <p>Phim rất tuyệt vời, tôi đã bị cuốn hút từ đầu đến cuối.</p>
                                     </div>
-                                </li>
-                            </ol>
-                        </li>
+                                </div>
+                            </li>
+                        <?php endforeach;
+                        ?>
                     </ol>
                 </div>
 
@@ -165,7 +141,10 @@ $this->params['breadcrumbs'][] = $model->updated_at;
                                 </div>
                             </div>
                             <div class="col-12">
-                                <button type="submit" class="btn original-btn">Reply</button>
+                                <?= Html::a('Reply', '#', [
+                                    'class' => 'btn original-btn',
+                                    'type' => 'submit'
+                                ]); ?>
                             </div>
                         </div>
                     </form>
@@ -201,7 +180,7 @@ $this->params['breadcrumbs'][] = $model->updated_at;
                     <!-- Widget Area -->
                     <div class="sidebar-widget-area">
                         <h5 class="title">Latest Posts</h5>
-                        <?php $posts = Post::find()->limit(7)->orderBy(['created_at' => SORT_DESC])->all(); ?>
+                        <?php $posts = Post::find()->limit(4)->orderBy(['created_at' => SORT_DESC])->all(); ?>
                         <?php
                         foreach ($posts as $post):
                             /** @var Post $post */
@@ -212,11 +191,11 @@ $this->params['breadcrumbs'][] = $model->updated_at;
                                 <div class="single-blog-post d-flex align-items-center widget-post">
                                     <!-- Post Thumbnail -->
                                     <div class="post-thumbnail">
-                                        <?= Html::img("/".$post->image) ?>
+                                        <?= Html::img("/" . $post->image) ?>
                                     </div>
                                     <!-- Post Content -->
                                     <div class="post-content">
-                                        <a href="#" class="post-tag"><?=Html::encode($post->category->title) ?></a>
+                                        <a href="#" class="post-tag"><?= Html::encode($post->category->title) ?></a>
                                         <h4><a href="#" class="post-headline"><?= Html::encode($post->title) ?></a></h4>
                                         <div class="post-meta">
                                             <p><a href="#">
@@ -244,7 +223,7 @@ $this->params['breadcrumbs'][] = $model->updated_at;
                             foreach ($tags as $tag):
                                 /** @var Tag $tag */
                                 ?>
-                                <li><a href="/<?= $tag->title ?>"> <?= $tag->title ?></a></li>
+                                <li><a href="/post/tag/<?= $tag->title ?>"> <?= $tag->title ?></a></li>
                             <?php
                             endforeach;
                             ?>

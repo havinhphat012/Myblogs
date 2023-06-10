@@ -15,22 +15,21 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Update', ['update', 'id_comment' => $model->id_comment], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id_comment' => $model->id_comment], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+<!--    <p>-->
+<!--        --><?php //= Html::a('Update', ['update', 'id_comment' => $model->id_comment], ['class' => 'btn btn-primary']) ?>
+<!--        --><?php //= Html::a('Delete', ['delete', 'id_comment' => $model->id_comment], [
+//            'class' => 'btn btn-danger',
+//            'data' => [
+//                'confirm' => 'Are you sure you want to delete this item?',
+//                'method' => 'post',
+//            ],
+//        ]) ?>
+<!--    </p>-->
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id_comment',
-            'id_user',
+//            'id_user',
             'content',
             'created_at',
             'updated_at',

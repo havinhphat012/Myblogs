@@ -3,6 +3,7 @@
 /** @var yii\web\View $this */
 
 use backend\models\Post;
+use backend\models\Tag;
 use yii\helpers\Html;
 use yii\helpers\StringHelper;
 
@@ -85,8 +86,11 @@ $posts = Post::find()->limit(5)->orderBy(['id_post' => SORT_DESC])->all();
                                 </h4>
                                 <p><?= $post->description = StringHelper::truncateWords($post->description, 50, '...', true);?></p>
                                 <div class="post-meta">
-                                    <p>By <a href="#"><?=$post->user->username?></a></p>
-                                    <p><?=$countComment = \backend\models\Comment::find()->where(['id_post'=> 1])->count();?> comment</p>
+                                    <p>By <?=$post->user->username?></p>
+                                    <?=Html::a('Comment','post/slug/'.  $post->slug.'#talk-comment',[
+                                        'class'=>'post-headline'
+                                    ]);?>
+                                   <?= $countComment = \backend\models\Comment::find()->where(['id_post'=> 1])->count();?> </a>
                                 </div>
                             </div>
                         </div>
@@ -142,8 +146,12 @@ $posts = Post::find()->limit(5)->orderBy(['id_post' => SORT_DESC])->all();
                                 </div>
                                 <!-- Post Content -->
                                 <div class="post-content">
-                                    <a href="#" class="post-tag"><?=$post->category->title?></a>
-                                    <h4><a href="#" class="post-headline"><?=$post->title?></a></h4>
+                                    <?= Html::a($post->category->title,'post/slug/'.  $post->slug,[
+                                        'class'=>'post-tag'
+                                    ])?>
+                                    <h4> <?= Html::a($post->title,'post/slug/'.  $post->slug,[
+                                            'class'=>'post-headline'
+                                        ])?></h4>
                                     <div class="post-meta">
                                         <p><a href="#">
                                             <?= Yii::$app->formatter->asDate($post->created_at, 'dd');?>
@@ -168,13 +176,13 @@ $posts = Post::find()->limit(5)->orderBy(['id_post' => SORT_DESC])->all();
                     <div class="widget-content">
                         <ul class="tags">
                             <?php
-                            $tags = Post::find()->limit(5)->select('id_tag')->distinct()->all();
+                            $tags = Tag::find()->limit(3)->distinct()->all();
                             ?>
                             <?php
-                            foreach ($posts as $post):
-                                /** @var Post $post */
+                            foreach ($tags as $tag):
+                                /** @var Tag $tag */
                                 ?>
-                                <li><a href="/<?=$post->title?>"><?=$post->title?></a></li>
+                                <li><a href="/post/tag/<?= $tag->title ?>"> <?= $tag->title ?></a></li>
                             <?php
                             endforeach;
                             ?>
